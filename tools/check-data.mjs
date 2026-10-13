@@ -1,0 +1,25 @@
+// 사용: node tools/check-data.mjs   — 공유 전 점검(날짜/요일 일치, 자리표시자 남았는지, RSVP·OG 설정, 사진 파일 존재)
+import fs from 'node:fs'; import vm from 'node:vm';
+const root=new URL('../',import.meta.url); const rd=p=>fs.readFileSync(new URL(p,root),'utf8');
+const w={}; vm.runInNewContext(rd('invitation-data.js'),{window:w}); const D=w.INVITATION, html=rd('index.html');
+const bad=[],todo=[]; const d=new Date(D.event.dateISO);
+const kst=new Date(d.getTime()+9*3600e3);
+const wd=['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'][kst.getUTCDay()];
+if(wd!==D.event.weekdayEn)bad.push(`요일 불일치: 날짜는 ${wd}, 표시는 ${D.event.weekdayEn}`);
+if(String(kst.getUTCDate())!==D.event.dayNum)bad.push('dayNum 불일치');
+const mon=['January','February','March','April','May','June','July','August','September','October','November','December'][kst.getUTCMonth()];
+if(!D.event.dateEn.startsWith(mon)||!D.event.dateEn.includes(String(kst.getUTCFullYear())))bad.push('dateEn 불일치');
+const h=kst.getUTCHours()%12||12, m=String(kst.getUTCMinutes()).padStart(2,'0');
+if(!D.event.timeEn.startsWith(`${h}:${m}`))bad.push('timeEn 불일치');
+const walk=(o,p='')=>{for(const[k,v]of Object.entries(o)){if(typeof v==='string'&&/^\[.*\]$/.test(v))todo.push(`${p}${k} = ${v}`);else if(v&&typeof v==='object')walk(v,p+k+'.')}};walk(D);
+const ph=(n,p)=>{if(!String(p||'').replace(/\D/g,''))todo.push('전화번호 비어 있음: '+n)};
+ph('신랑',D.contacts.groom.phone);ph('신부',D.contacts.bride.phone);
+for(const g of ['groom','bride'])D.contacts.hosts[g].forEach(h=>ph(g+' '+h.role,h.phone));
+for(const g of ['groom','bride'])D.accounts[g].forEach(a=>{if(/^[0-]+(-[0-]+)*$/.test(a.number)||a.number==='1000-0000-0000')todo.push(`계좌번호 자리표시자: ${g} ${a.role} ${a.name} (${a.number})`)});
+if(!D.venue.lat)todo.push('venue.lat/lng 없음 (네이버/카카오는 장소명 검색으로 열림 — 지도 버튼을 실제 폰에서 확인하세요)');
+if(html.includes('__SITE_URL__'))todo.push('index.html 의 __SITE_URL__ 미설정 (node tools/set-site-url.mjs https://배포주소/)');
+const og=html.match(/og:title" content="([^"]*)"/)?.[1]; if(og!==D.meta.title)bad.push(`OG 제목(${og}) ≠ 데이터 제목(${D.meta.title})`);
+D.photos.notes.map(n=>n.src).forEach((s,i)=>{if(!s)todo.push(`사진 ${i} 비어 있음`);else if(!fs.existsSync(new URL(s,root)))bad.push(`사진 파일 없음: ${s}`)});
+if(!fs.existsSync(new URL(D.venue.directionsImage,root)))bad.push('약도 이미지 없음');
+console.log(bad.length?'❌ 오류\n - '+bad.join('\n - '):'✅ 오류 없음'); console.log(todo.length?'\n🔧 공유 전 할 일\n - '+todo.join('\n - '):'\n🔧 남은 할 일 없음');
+process.exit(bad.length?1:0);

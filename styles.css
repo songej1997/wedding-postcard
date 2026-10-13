@@ -1,0 +1,310 @@
+/* ============================================================
+   엽서 청첩장 — 숲 초록 · 빛바랜 아이보리 · 차분한 금색
+   색/폰트/모션 값은 :root 에서 한 번에 바꿀 수 있어요.
+   ============================================================ */
+:root{
+  --forest:#4a6850; --forest-d:#375040; --forest-dd:#26382c; --forest-l:#6b8b72;
+  --ivory:#efe7d0; --ivory-l:#f6f0de; --ivory-d:#ddd1b0;
+  --ink:#2a382e; --ink-soft:#5b6b5d;
+  --gold:#b8964a; --gold-l:#d7bc78;
+  --on-green:#f1ead5;
+
+  --letter-font:'Gaegu','Noto Sans KR',sans-serif;   /* 편지 속 손글씨체 */
+  --hand:'Playfair Display','Noto Serif KR','Batang',serif;   /* 제목·라벨 글씨체 (예전 Gaegu 손글씨로 되돌리려면 'Gaegu' 로 교체) */
+  --sans:'Noto Sans KR',system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+
+  --soft:cubic-bezier(.25,1,.5,1);          /* ease-out: 부드럽게 시작해 끝에서 살짝 감속 */
+  --spring:cubic-bezier(.34,1.42,.5,1);      /* 살짝 튕기는 spring 느낌 */
+  --ease:cubic-bezier(.22,1,.36,1);
+  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .08 0 0 0 0 .12 0 0 0 0 .08 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+  --noise-w:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .34 0 0 0 0 .16 0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-variant-numeric:lining-nums;background:var(--forest-dd);color:var(--on-green);font-family:var(--sans);font-weight:400;line-height:1.6;overflow-x:hidden}
+html.lock,body.lock{overflow:hidden}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+a{color:inherit;text-decoration:none}
+svg{display:block}
+img{display:block;max-width:100%}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--gold-l);outline-offset:3px;border-radius:4px}
+
+/* ── 페이지 틀 ── */
+.page{position:relative;max-width:430px;margin:0 auto;background-color:var(--forest);background-image:var(--noise);background-blend-mode:multiply;overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,.35)}
+.sec{position:relative;padding:92px 22px 84px;text-align:center}
+
+.h2{font-family:var(--hand);font-weight:500;font-size:18px;letter-spacing:.17em;color:var(--on-green);line-height:1.3}
+.rule{display:block;width:34px;height:1px;background:var(--gold-l);margin:14px auto 0;opacity:.9}
+.tap-hint--btn{display:block;margin-left:auto;margin-right:auto;padding:10px 14px}
+.tap-hint{font-family:var(--hand);font-size:13px;letter-spacing:.2em;color:var(--on-green);opacity:.6;margin-top:18px;transition:opacity .5s}
+
+/* ── 종이 카드 공통 ── */
+.paper-wrap{filter:drop-shadow(0 3px 5px rgba(10,22,14,.34)) drop-shadow(0 12px 16px rgba(10,22,14,.2));margin:0 auto}
+.deckle{background-color:var(--ivory);background-image:var(--noise-w);background-blend-mode:multiply;color:var(--ink)}
+
+/* ── 장식 ── */
+.deco{position:absolute;color:var(--ivory-d);pointer-events:none;filter:url(#rough);opacity:.9}
+.deco--tree{width:84px;height:112px;right:20px;bottom:86px;color:var(--gold-l);opacity:.75}
+.deco--sprig-l{width:46px;height:100px;left:16px;bottom:150px;opacity:.55}
+.deco--sprig-r{width:34px;height:74px;right:8px;top:-6px;opacity:.5}
+.deco--spark{width:14px;height:14px;color:var(--gold-l);opacity:.8}
+.deco--spark.s1{left:34px;top:70px}
+.deco--spark.s2{right:48px;top:36%;width:10px;height:10px}
+
+/* ── 1. OPENING ── */
+.opening{min-height:100vh;min-height:100svh;display:flex;align-items:center;justify-content:center;padding-top:70px;padding-bottom:50px}
+.opening__inner{display:flex;flex-direction:column;align-items:center;opacity:0;transform:scale(.94);transition:opacity 1s var(--ease),transform 1.1s var(--spring)}
+.opening__inner.in{opacity:1;transform:none}
+.save{font-family:var(--hand);font-weight:700;font-size:38px;line-height:1.7;letter-spacing:.2em;margin-right:-.2em}
+.op-date{font-family:var(--hand);font-size:21px;letter-spacing:.06em;margin-top:22px}
+.op-time{font-family:var(--hand);font-size:15px;letter-spacing:.2em;margin-top:14px;opacity:.9}
+.op-place{font-family:var(--hand);font-size:17px;letter-spacing:.14em;margin-top:22px}
+.op-city{font-family:var(--hand);font-size:15px;letter-spacing:.2em;margin-top:8px;opacity:.85}
+.opening .rule{margin-top:26px}
+
+.ribbon-wrap{margin-top:64px;filter:drop-shadow(0 3px 4px rgba(10,22,14,.3))}
+.ribbon{padding:15px 34px;font-family:var(--hand);font-size:16px;letter-spacing:.18em;white-space:nowrap}
+.scroll-hint{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:62px;font-family:var(--hand);font-size:13px;letter-spacing:.2em;opacity:.65}
+.scroll-hint svg{width:16px;height:16px}
+
+/* ── 2. LETTER ── */
+.letter{padding-bottom:70px}
+.stage{--E:210px;position:relative;width:min(340px,100%);margin:44px auto 0;height:calc(var(--E) + 40px);transition:height 1.1s var(--soft)}
+.stage[data-state="flap"]{height:350px}
+.stage[data-state="rise"]{height:440px}
+.stage[data-state="open"],.stage[data-state="unfold"]{height:570px}
+.env-wrap{position:absolute;left:0;right:0;bottom:0;height:var(--E);transform:rotate(-3.5deg);transition:transform 1.1s var(--soft);perspective:850px;perspective-origin:50% 25%}
+.stage:not([data-state="closed"]) .env-wrap{transform:none}
+
+.env-back{position:absolute;inset:0;background-color:#d9cca6;background-image:var(--noise-w);background-blend-mode:multiply;box-shadow:0 14px 22px -6px rgba(10,22,14,.45);z-index:0}
+.env-back::after{content:"";position:absolute;inset:0;opacity:0;transition:opacity 1s var(--soft);
+  background:linear-gradient(180deg,rgba(60,45,15,.42),rgba(60,45,15,.12) 45%,transparent 70%)}
+.stage:not([data-state="closed"]) .env-back::after{opacity:1}
+.env-front{position:absolute;inset:0;z-index:3;pointer-events:none}
+.env-front::before,.env-front::after{content:"";position:absolute;inset:0;background-color:var(--ivory);background-image:var(--noise-w);background-blend-mode:multiply}
+.env-front::before{clip-path:polygon(0 0,50% 56%,100% 100%,0 100%);filter:brightness(.95)}
+.env-front::after{clip-path:polygon(100% 0,50% 56%,100% 100%);filter:brightness(1.02)}
+.flap{position:absolute;left:0;right:0;top:0;height:60%;z-index:4;transform-origin:50% 0;transform-style:preserve-3d;will-change:transform}
+.flap i{position:absolute;inset:0;clip-path:polygon(0 0,100% 0,50% 100%);backface-visibility:hidden;-webkit-backface-visibility:hidden;background-color:var(--ivory-l);background-image:var(--noise-w);background-blend-mode:multiply}
+.flap i::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(40,28,8,.0),rgba(40,28,8,.5));opacity:0}  /* 젖혀질 때 빛이 달라지는 음영 */
+.flap-in{transform:rotateY(180deg);background-color:#cdbf97!important}
+.stage:not([data-state="closed"]):not([data-state="flap"]) .flap{transform:rotateX(180deg);z-index:1}
+.stage[data-state="flap"] .flap{animation:flapOpen 1.25s both}
+.stage[data-state="flap"] .flap i::after{animation:flapShade 1.25s both}
+/* 덮개: 처음엔 천천히 들리다가(ease-in) 수직을 지나 위로 넘어가며 감속(ease-out). 수직(=옆에서 보면 선)일 때 레이어 순서를 바꿔 어색함이 없게 함 */
+@keyframes flapOpen{
+  0%{transform:rotateX(0);z-index:4;animation-timing-function:cubic-bezier(.5,0,.8,.55)}
+  49%{transform:rotateX(88deg) translateZ(14px);z-index:4}
+  50%{transform:rotateX(90deg) translateZ(14px);z-index:1;animation-timing-function:cubic-bezier(.25,1,.5,1)}
+  100%{transform:rotateX(180deg) translateZ(0);z-index:1}
+}
+@keyframes flapShade{0%{opacity:0}50%{opacity:.55}100%{opacity:.18}}
+
+.seal{position:absolute;left:50%;top:58%;z-index:5;width:68px;height:68px;margin:-34px 0 0 -34px;padding:0;border-radius:50%;
+  filter:drop-shadow(0 3px 3px rgba(8,18,12,.5)) drop-shadow(0 8px 10px rgba(8,18,12,.3));transition:transform .6s var(--ease),opacity .5s}
+.seal svg{width:100%;height:100%;overflow:visible}
+.stage.pressed .seal{animation:none!important;transform:scale(.9) translateY(2px);transition:transform .14s ease-out}
+.stage[data-state="closed"] .seal{animation:pulse 3.2s ease-in-out infinite}
+.stage:not([data-state="closed"]) .seal{transform:scale(1.12) translateY(-4px);opacity:0;pointer-events:none;transition:transform .7s var(--soft),opacity .5s .1s}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+.letter-card{position:absolute;left:6%;right:6%;bottom:14px;height:150px;z-index:2;overflow:hidden;transform-origin:50% 100%;
+  filter:drop-shadow(0 0 0 rgba(10,22,14,0)) drop-shadow(0 0 0 rgba(10,22,14,0));
+  transition:height 1.5s var(--soft)}
+.stage[data-state="rise"] .letter-card{animation:liftOut 1.5s both}
+.stage[data-state="unfold"] .letter-card,.stage[data-state="open"] .letter-card{transform:translateY(-106px);height:410px;
+  filter:drop-shadow(0 3px 4px rgba(10,22,14,.26)) drop-shadow(0 8px 12px rgba(10,22,14,.14))}
+.stage[data-state="unfold"] .letter-card{animation:settle 1.5s both}
+/* 엽서가 봉투에서 스르륵 올라오는 동안 그림자가 생겼다가(뜸) 안착하며 얇게 가라앉음 */
+@keyframes liftOut{
+  0%{transform:translateY(0) rotateX(9deg);filter:drop-shadow(0 0 0 rgba(10,22,14,0)) drop-shadow(0 0 0 rgba(10,22,14,0));animation-timing-function:cubic-bezier(.25,1,.5,1)}
+  60%{filter:drop-shadow(0 20px 20px rgba(10,22,14,.42)) drop-shadow(0 6px 8px rgba(10,22,14,.26))}
+  100%{transform:translateY(-106px) rotateX(0);filter:drop-shadow(0 3px 4px rgba(10,22,14,.26)) drop-shadow(0 8px 12px rgba(10,22,14,.14))}
+}
+@keyframes settle{
+  0%{transform:translateY(-106px) rotateX(0)}
+  35%{transform:translateY(-120px) rotateX(2deg);filter:drop-shadow(0 14px 16px rgba(10,22,14,.34)) drop-shadow(0 4px 6px rgba(10,22,14,.2))}
+  100%{transform:translateY(-106px) rotateX(0)}
+}
+.letter-card .letter-paper{position:relative;height:410px;padding:36px 14px 26px;display:flex;flex-direction:column;align-items:center}
+.letter-paper::after{ /* 세 번 접었던 자국 */
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(transparent calc(33.3% - 1px),rgba(70,55,20,.16) 33.3%,rgba(255,255,255,.35) calc(33.3% + 1px),transparent calc(33.3% + 3px)),
+             linear-gradient(transparent calc(66.6% - 1px),rgba(70,55,20,.16) 66.6%,rgba(255,255,255,.35) calc(66.6% + 1px),transparent calc(66.6% + 3px))}
+.letter-paper > *{opacity:0;transition:opacity .9s .5s var(--soft)}
+.stage[data-state="unfold"] .letter-paper > *,.stage[data-state="open"] .letter-paper > *{opacity:1}
+.letter-paper::after{opacity:1!important;transition:none}
+
+.lt-name{font-family:var(--letter-font);font-weight:700;font-size:32px;line-height:1.25;color:var(--ink);word-break:keep-all;overflow-wrap:anywhere;max-width:100%}
+.lt-line{font-family:var(--letter-font);font-weight:700;font-size:36px;line-height:1.15;color:var(--ink);margin-top:2px}
+.lt-heart{width:16px;height:16px;color:var(--forest);margin-top:4px}
+.polaroid--letter{width:170px;margin-top:12px;transform:rotate(-2deg)}
+.polaroid--letter .photo{aspect-ratio:1/1}
+.lt-names{font-family:var(--hand);font-size:13px;letter-spacing:.16em;margin-top:14px;color:var(--ink)}
+.lt-tag{font-family:var(--hand);font-size:15px;color:var(--ink-soft);display:flex;align-items:center;gap:5px;margin-top:2px}
+.mini-heart{width:11px;height:11px;color:var(--forest)}
+.lt-date{font-family:var(--hand);font-size:15px;line-height:1.35;margin-top:10px;color:var(--ink)}
+.lt-body{margin-top:24px;font-family:var(--letter-font);font-size:16px;line-height:1.85;color:var(--ink);letter-spacing:-.01em}
+.lt-body p{white-space:nowrap}
+.lt-body .gap{height:12px}
+.lt-sign{margin-top:28px;font-family:var(--letter-font);font-size:19px;color:var(--ink)}
+.lt-sign b{font-weight:600}.lt-sign .sep{margin:0 8px;opacity:.5}
+.lt-place{font-family:var(--hand);font-size:14px;letter-spacing:.1em;line-height:1.4;margin-top:8px;color:var(--ink)}
+
+.name-form{max-width:300px;margin:24px auto 0;text-align:left}
+.name-form label{display:block;font-size:12px;opacity:.8;margin-bottom:6px}
+.name-row{display:flex;gap:8px}
+.name-row input{flex:1;min-width:0;height:44px;padding:0 12px;background:var(--ivory);color:var(--ink);border:1px solid var(--ivory-d);border-radius:2px;font-size:16px}
+.name-row button{height:44px;padding:0 16px;border:1px solid var(--on-green);font-family:var(--hand);font-size:15px;letter-spacing:.12em;border-radius:2px}
+
+/* ── 폴라로이드 공통 ── */
+.polaroid{position:relative;background:var(--ivory-l);padding:9px 9px 30px;box-shadow:0 2px 4px rgba(10,22,14,.3),0 8px 14px rgba(10,22,14,.18);border-radius:1px}
+.photo{position:relative;aspect-ratio:4/5;background:linear-gradient(160deg,#c3c8b2,#aab29c);overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover}
+.photo.is-blank::after{content:"";position:absolute;inset:0;background:var(--noise);opacity:.25;mix-blend-mode:multiply}
+.tape{position:absolute;left:50%;top:-11px;width:62px;height:20px;margin-left:-31px;transform:rotate(-3deg);background:rgba(215,188,120,.62);box-shadow:0 1px 2px rgba(0,0,0,.18)}
+.tape--sm{top:-9px;width:44px;height:16px;margin-left:-22px}
+
+/* ── 3. NOTES ── */
+.notes{padding-bottom:70px}
+.heart{position:relative;width:min(360px,100%);aspect-ratio:1/1.12;margin:48px auto 0}
+.heart .tile{position:absolute;width:24.5%;padding:3px 3px 10px;transform:translate(-50%,-50%) rotate(var(--r,0deg));cursor:pointer;
+  transition:transform .6s var(--soft),opacity .7s var(--soft)}
+.heart .tile .photo{aspect-ratio:4/5}
+@media (hover:hover){.heart .tile:hover{transform:translate(-50%,-50%) rotate(0deg) scale(1.12);z-index:5}}
+.heart .tile:active{transform:translate(-50%,-50%) rotate(0deg) scale(1.04)}
+.heart .tile:focus-visible{z-index:6}
+.js .heart.rv .tile{opacity:0;transform:translate(-50%,-44%) rotate(var(--r,0deg)) scale(.6)}
+.js .heart.rv.in .tile{opacity:1;transform:translate(-50%,-50%) rotate(var(--r,0deg));transition-delay:calc(var(--i) * 70ms)}
+.js .heart.rv.in .tile:hover{transition-delay:0s}
+
+/* ── 모달 ── */
+.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:16px}
+.modal__scrim{position:absolute;inset:0;background:rgba(18,30,22,.62);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;transition:opacity .35s}
+.modal.in .modal__scrim{opacity:1}
+.modal__sheet{position:relative;width:min(398px,100%);max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto;padding:34px 26px 26px;text-align:center;
+  opacity:0;transform:translateY(24px) scale(.9);transition:transform .55s var(--spring),opacity .3s;overscroll-behavior:contain}
+.modal.in .modal__sheet{opacity:1;transform:none}
+.polaroid--big{width:78%;margin:0 auto;transform:rotate(-3deg);padding:11px 11px 36px}
+.memo{position:relative;margin:30px auto 0;max-width:292px;padding:20px 20px 18px;background:#f7f1dc;box-shadow:0 2px 4px rgba(10,22,14,.22);transform:rotate(1.2deg);
+  background-image:repeating-linear-gradient(transparent 0 26px,rgba(120,140,110,.22) 26px 27px)}
+.memo p{font-family:var(--hand);font-size:19px;line-height:27px;color:var(--ink);white-space:pre-line;word-break:keep-all;text-align:left}
+.memo.swap{animation:swap .5s var(--spring)}
+.polaroid--big.swap{animation:swapPh .5s var(--spring)}
+@keyframes swap{from{opacity:0;transform:translateY(10px) rotate(3deg)}to{opacity:1;transform:rotate(1.2deg)}}
+@keyframes swapPh{from{opacity:0;transform:translateX(var(--dx,24px)) rotate(1deg)}to{opacity:1;transform:rotate(-3deg)}}
+.note-nav{display:flex;justify-content:center;align-items:center;gap:18px;margin-top:22px}
+.note-nav button{width:40px;height:40px;display:grid;place-items:center;border:1px solid rgba(42,56,46,.35);border-radius:50%;color:var(--ink);transition:transform .3s var(--spring)}
+.note-nav button:active{transform:scale(.9)}
+.note-nav svg{width:18px;height:18px}.note-nav .flip{transform:scaleX(-1)}
+.note-nav output{min-width:64px;text-align:center;font-family:var(--hand);font-size:15px;letter-spacing:.14em;color:var(--ink)}
+.back{display:inline-block;margin-top:22px;padding:8px 14px;font-family:var(--hand);font-size:16px;letter-spacing:.06em;color:var(--ink)}
+.modal--map .back{color:var(--on-green);border:1px solid rgba(241,234,213,.5);margin-top:12px;border-radius:2px}
+.mapzoom{position:relative;width:min(430px,100%);text-align:center;opacity:0;transform:scale(.94);transition:transform .5s var(--spring),opacity .3s}
+.modal.in .mapzoom{opacity:1;transform:none}
+.mapzoom__scroll{max-height:calc(100dvh - 110px);max-height:calc(100vh - 110px);overflow:auto;background:var(--ivory);border-radius:2px;-webkit-overflow-scrolling:touch}
+.mapzoom__scroll img{width:max(100%,760px);max-width:none}
+.mapzoom__hint{font-family:var(--hand);font-size:13px;letter-spacing:.12em;color:var(--on-green);opacity:.75;margin-top:10px}
+
+/* ── 5. FIND ── */
+.venue-row{margin-top:40px;text-align:left;max-width:360px;margin-left:auto;margin-right:auto}
+.venue-link{display:flex;justify-content:space-between;align-items:center;font-family:var(--hand);font-size:19px;letter-spacing:.12em;padding:6px 0}
+.venue-link svg{width:18px;height:18px;opacity:.85}
+.va{font-size:12px;opacity:.7;margin-top:2px}
+.find .paper-wrap{max-width:380px;margin-top:20px}
+.mapcard{padding:14px 12px 12px}
+.map-open{display:block;width:100%}
+.map-open img{width:100%;height:auto;mix-blend-mode:multiply}
+.mapcard figcaption{font-family:var(--hand);font-size:12px;letter-spacing:.2em;color:var(--ink-soft);margin-top:6px}
+.mapbtns{display:flex;gap:10px;max-width:380px;margin:22px auto 0}
+.mbtn{flex:1;padding:14px 4px;font-family:var(--hand);font-weight:700;font-size:13px;letter-spacing:.08em;display:flex;align-items:center;justify-content:center;gap:3px;transition:transform .3s var(--spring);filter:none}
+.mbtn svg{width:13px;height:13px}
+.mbtn:active{transform:scale(.95)}
+.mini-actions{display:flex;justify-content:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+.chip{padding:8px 14px;font-size:12.5px;border:1px solid rgba(241,234,213,.45);border-radius:20px;color:var(--on-green)}
+
+/* ── 7. ENDING ── */
+.ending{padding-bottom:40px}
+.end-msg{font-family:var(--hand);font-size:21px;line-height:1.7;margin-top:36px;white-space:pre-line;word-break:keep-all}
+.end-names{font-family:var(--hand);font-size:17px;letter-spacing:.16em;margin-top:22px;color:var(--gold-l)}
+.grove{position:relative;height:170px;margin:34px auto 0;max-width:340px;color:var(--ivory-d)}
+.grove svg{position:absolute;filter:url(#rough)}
+.grove .g1{width:78px;height:104px;left:34px;bottom:14px}
+.grove .g2{width:100px;height:134px;left:112px;bottom:10px;color:var(--gold-l)}
+.grove .g3{width:36px;height:78px;right:56px;bottom:12px}
+.grove .g4{width:62px;height:31px;left:8px;bottom:0}
+.grove .g5{width:70px;height:35px;right:6px;bottom:0}
+.grove::after{content:"";position:absolute;left:0;right:0;bottom:11px;height:1px;background:var(--ivory-d);opacity:.5}
+.credit{font-family:var(--hand);font-size:13px;letter-spacing:.14em;opacity:.55;margin-top:30px}
+
+/* ── 토스트 ── */
+.toast{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));z-index:200;transform:translate(-50%,20px);max-width:86vw;padding:11px 18px;background:rgba(36,54,42,.96);color:var(--on-green);font-size:13px;border-radius:22px;opacity:0;pointer-events:none;transition:opacity .3s,transform .45s var(--spring);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ── scroll reveal ── */
+.js .rv{opacity:0;transform:translateY(26px) scale(.97);transition:opacity .7s var(--ease),transform .9s var(--spring)}
+.js .rv.in{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important;transition-delay:0s!important;scroll-behavior:auto!important}
+  .js .rv,.opening__inner{opacity:1;transform:none}
+}
+@media (max-width:360px){
+  .sec{padding-left:16px;padding-right:16px}
+  .save{font-size:33px}
+  .tk-left{flex-basis:98px}.tk-num{font-size:54px}
+  .mbtn{font-size:12px}
+}
+@media (min-width:431px){ body{background:var(--forest-dd)} }
+
+/* ── 홀 사진 / LOCATION ── */
+.hall-photo{max-width:380px;margin-top:38px}
+.hall-photo img{width:100%;height:auto}
+.venue-row{margin-top:26px;text-align:center}
+.loc-label{font-family:var(--hand);font-size:12px;letter-spacing:.3em;color:var(--gold-l)}
+.venue-link{justify-content:center;gap:8px;font-size:20px;letter-spacing:.06em;margin-top:6px}
+.venue-link .vn{font-family:'Noto Serif KR',var(--hand),serif;font-weight:500}
+.va{font-size:12.5px;opacity:.8;margin-top:2px}
+
+/* ── CONTACT / ACCOUNTS ── */
+.sub{font-family:'Noto Serif KR',serif;font-size:14px;line-height:1.9;margin-top:22px;opacity:.92}
+.sub small{font-family:var(--sans);font-size:12px;opacity:.75;line-height:1.8;display:inline-block;margin-top:4px}
+.callrow{display:flex;justify-content:center;gap:10px;margin-top:26px;flex-wrap:wrap}
+.chip--solid{display:inline-flex;align-items:center;gap:7px;padding:11px 18px;font-size:13px;background:rgba(241,234,213,.08)}
+.chip svg{width:15px;height:15px}
+.hostbtn{margin-top:18px;padding:10px 14px;font-size:13px;color:var(--on-green);text-decoration:underline;text-underline-offset:4px;opacity:.9}
+.acc{max-width:360px;margin:34px auto 0;text-align:left}
+.acc__item{border-bottom:1px solid rgba(241,234,213,.25)}
+.acc__item:first-child{border-top:1px solid rgba(241,234,213,.25)}
+.acc__head{width:100%;display:flex;justify-content:space-between;align-items:center;padding:17px 4px;font-size:14px;color:var(--on-green)}
+.acc__head svg{width:14px;height:14px;color:var(--gold-l);transition:transform .4s var(--ease)}
+.acc__item.is-open .acc__head svg{transform:rotate(180deg)}
+.acc__body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease)}
+.acc__item.is-open .acc__body{grid-template-rows:1fr}
+.acc__body>div{overflow:hidden}
+.acc__inner{padding:2px 0 18px;display:flex;flex-direction:column;gap:10px}
+.acc__row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;background-color:var(--ivory);background-image:var(--noise-w);background-blend-mode:multiply;color:var(--ink);border-radius:2px;box-shadow:0 2px 4px rgba(10,22,14,.25)}
+.acc__who{font-size:12px;color:var(--ink-soft)}
+.acc__num{font-size:14px;margin-top:2px;word-break:break-all}
+.acc__copy{flex:0 0 auto;width:38px;height:38px;display:grid;place-items:center;border:1px solid rgba(42,56,46,.3);border-radius:2px;color:var(--ink-soft);background:#f9f4e2;transition:transform .3s var(--spring),background .3s,color .3s}
+.acc__copy svg{width:17px;height:17px}
+.acc__copy:active{transform:scale(.9)}
+.acc__copy.is-copied{background:var(--forest);color:var(--on-green);border-color:var(--forest)}
+.host-title{font-family:var(--hand);font-size:17px;letter-spacing:.12em;color:var(--ink)}
+.host-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+.host-col h4{font-family:'Noto Serif KR',serif;font-size:13px;font-weight:600;color:var(--forest);margin-bottom:16px}
+.host-person{margin-bottom:20px}
+.host-person p{font-size:13px;color:var(--ink);margin-bottom:9px}
+.host-act{display:flex;justify-content:center;gap:14px}
+.host-act a,.host-act button{width:40px;height:40px;display:grid;place-items:center;border:1px solid rgba(42,56,46,.35);border-radius:50%;color:var(--ink)}
+.host-act svg{width:18px;height:18px}
+
+/* ── D-DAY ── */
+.dday{margin-top:44px}
+.dday__labels,.dday__nums{display:grid;grid-template-columns:repeat(4,1fr);max-width:260px;margin:0 auto;text-align:center}
+.dday__labels{font-family:var(--hand);font-size:10px;letter-spacing:.2em;opacity:.65}
+.dday__nums{margin-top:6px;font-family:var(--hand);font-size:28px;font-weight:500;color:var(--gold-l);font-variant-numeric:lining-nums tabular-nums}
+.dday__caption{margin-top:14px;font-family:'Noto Serif KR',serif;font-size:13.5px;opacity:.9}

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>CREATE AN INVITATION</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#4a6850;color:#f1ead5;font-family:'Noto Sans KR',sans-serif;min-height:100vh}
+main{max-width:430px;margin:0 auto;padding:56px 22px}
+h1{font-family:'Playfair Display',serif;font-size:22px;letter-spacing:.2em;text-align:center;margin:0 0 6px}
+.sub{font-family:'Playfair Display',serif;text-align:center;letter-spacing:.2em;font-size:13px;opacity:.7;margin-bottom:36px}
+label{font-size:13px;display:block;margin-bottom:8px}
+input{width:100%;box-sizing:border-box;height:52px;padding:0 14px;font-size:16px;background:#efe7d0;color:#2a382e;border:0;border-radius:2px}
+button{width:100%;height:52px;margin-top:14px;border:1px solid #f1ead5;color:#f1ead5;font-family:'Playfair Display',serif;font-size:17px;letter-spacing:.18em;background:none;border-radius:2px;cursor:pointer}
+.out{margin-top:26px;word-break:break-all;font-size:13px;background:rgba(0,0,0,.18);padding:14px;border-radius:2px;display:none}
+.row{display:flex;gap:8px}.row button{margin-top:10px}
+small{display:block;margin-top:18px;font-size:12px;opacity:.7;line-height:1.6}
+</style></head><body><main>
+<h1>CREATE AN INVITATION</h1><p class="sub">ONE NAME, ONE LITTLE INVITATION</p>
+<form id="f"><label for="n">초대할 분의 이름</label>
+<input id="n" maxlength="40" autocomplete="off" placeholder="예: 김민지" required>
+<button type="submit">MAKE INVITATION</button></form>
+<div class="out" id="out" role="status"></div>
+<div class="row" id="act" hidden><button id="cp" type="button">COPY LINK</button><button id="sh" type="button">SHARE</button><button id="op" type="button">PREVIEW</button></div>
+<small>이름과 띄어쓰기를 확인해 주세요. 최대 40자까지 표시돼요.<br>이 페이지는 초대장 링크에 이름을 붙여 주는 도구예요. 하객에게는 아래에서 만든 링크만 보내세요.</small>
+</main><script>
+var f=document.getElementById('f'),out=document.getElementById('out'),act=document.getElementById('act'),url='';
+f.addEventListener('submit',function(e){e.preventDefault();
+ var n=document.getElementById('n').value.replace(/[\u0000-\u001f<>]/g,'').replace(/\s+/g,' ').trim().slice(0,40); if(!n)return;
+ var base=location.href.replace(/[?#].*$/,'').replace(/[^\/]*$/,'')+'index.html';
+ url=base+'?to='+encodeURIComponent(n); out.style.display='block'; out.textContent=url; act.hidden=false;});
+document.getElementById('cp').onclick=function(){(navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(function(){this.textContent='COPIED'}.bind(this),function(){prompt('링크를 복사하세요',url)})};
+document.getElementById('sh').onclick=function(){navigator.share?navigator.share({title:'청첩장',url:url}).catch(function(){}):prompt('링크를 복사하세요',url)};
+document.getElementById('op').onclick=function(){window.open(url,'_blank','noopener')};
+</script></body></html>
