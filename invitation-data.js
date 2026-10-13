@@ -53,8 +53,7 @@ window.INVITATION = {
   /* ── 2. A LETTER FOR YOU ──────────────────────── */
   letter: {
     defaultName: "초대받는 분",             // ?to= 가 없고 이름도 입력하지 않았을 때
-    line1: "you're",
-    line2: "invited",
+    line1: "you're invited",
     /* 편지 본문 (편지 속 글). 빈 문자열 "" 은 한 줄 띄움 */
     body: [
       "저희 두 사람, 사랑의 결실을 맺습니다.",

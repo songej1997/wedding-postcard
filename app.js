@@ -179,22 +179,25 @@
   (function () { var lb = $('#letterBody'); L.body.forEach(function (t) { var p = doc.createElement('p'); if (t) p.textContent = t; else p.className = 'gap'; lb.appendChild(p); }); })();
   var guest = clean(new URLSearchParams(location.search).get('to'), L.maxNameLength);
   var guestEl = $('#guestName');
-  function setGuest(n) { guest = n; guestEl.textContent = n || L.defaultName; }
+  function setGuest(n) { guest = n; guestEl.textContent = n; $('#ltName').hidden = !n; }   // 이름이 없으면 이름 줄을 통째로 숨김
   setGuest(guest);
-  if (!guest) {
+  var plainUrl = (function () { var u = new URL(location.href); u.search = ''; u.hash = ''; return u.toString(); })();
+  if (!guest && /(^|[?&])edit(=|&|$)/.test(location.search)) {
     var nf = $('#nameForm'), ni = $('#nameInput'); nf.hidden = false;
     var shareUrl = '';
     nf.addEventListener('submit', function (e) {
       e.preventDefault();
       var n = clean(ni.value, L.maxNameLength); setGuest(n);
       if (!n) { $('#shareBox').hidden = true; return toast('이름을 적어 주세요'); }
-      var u = new URL(location.href); u.search = ''; u.hash = ''; u.searchParams.set('to', n);
+      var u = new URL(plainUrl); u.searchParams.set('to', n);
       shareUrl = u.toString();
       try { history.replaceState(null, '', shareUrl); } catch (err) {}   // 주소창도 이름이 들어간 링크로 바뀜
       $('#shareUrl').textContent = shareUrl; $('#shareBox').hidden = false;
+      setTimeout(function () { $('#shareBox').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' }); }, 150);   // 링크 상자가 화면 밖이면 보이는 곳으로 이동
       toast('편지에 이름을 적었어요. 아래 링크를 보내세요');
     });
     $('#shareCopy').addEventListener('click', function () { copyText(shareUrl, '이름이 들어간 링크를 복사했어요'); });
+    $('#plainCopy').addEventListener('click', function () { copyText(plainUrl, '이름 없는 링크를 복사했어요'); });
     $('#shareSend').addEventListener('click', function () {
       if (navigator.share) navigator.share({ title: D.meta.title, url: shareUrl }).catch(function () {});
       else copyText(shareUrl, '이름이 들어간 링크를 복사했어요');

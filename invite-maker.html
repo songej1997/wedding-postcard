@@ -19,7 +19,7 @@ small{display:block;margin-top:18px;font-size:12px;opacity:.7;line-height:1.6}
 <input id="n" maxlength="40" autocomplete="off" placeholder="예: 김민지" required>
 <button type="submit">MAKE INVITATION</button></form>
 <div class="out" id="out" role="status"></div>
-<div class="row" id="act" hidden><button id="cp" type="button">COPY LINK</button><button id="sh" type="button">SHARE</button><button id="op" type="button">PREVIEW</button></div>
+<div class="row" id="act" hidden><button id="cp" type="button">COPY LINK</button><button id="sh" type="button">SHARE</button><button id="op" type="button">PREVIEW</button><button id="pl" type="button">NO-NAME LINK</button></div>
 <small>이름과 띄어쓰기를 확인해 주세요. 최대 40자까지 표시돼요.<br>이 페이지는 초대장 링크에 이름을 붙여 주는 도구예요. 하객에게는 아래에서 만든 링크만 보내세요.</small>
 </main><script>
 var f=document.getElementById('f'),out=document.getElementById('out'),act=document.getElementById('act'),url='';
@@ -28,6 +28,8 @@ f.addEventListener('submit',function(e){e.preventDefault();
  var base=location.href.replace(/[?#].*$/,'').replace(/[^\/]*$/,'')+'index.html';
  url=base+'?to='+encodeURIComponent(n); out.style.display='block'; out.textContent=url; act.hidden=false;});
 document.getElementById('cp').onclick=function(){(navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(function(){this.textContent='COPIED'}.bind(this),function(){prompt('링크를 복사하세요',url)})};
+var plain=location.href.replace(/[?#].*$/,'').replace(/[^\/]*$/,'')+'index.html';
+document.getElementById('pl').onclick=function(){(navigator.clipboard?navigator.clipboard.writeText(plain):Promise.reject()).then(function(){alert('이름 없는 링크를 복사했어요\n'+plain)},function(){prompt('링크를 복사하세요',plain)})};
 document.getElementById('sh').onclick=function(){navigator.share?navigator.share({title:'청첩장',url:url}).catch(function(){}):prompt('링크를 복사하세요',url)};
 document.getElementById('op').onclick=function(){window.open(url,'_blank','noopener')};
 </script></body></html>

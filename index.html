@@ -28,7 +28,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Playfair+Display:wght@400;500;600&family=Noto+Serif+KR:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
 
@@ -114,8 +114,8 @@
         <!-- 편지 카드 -->
         <article class="letter-card" id="letterCard" aria-label="초대 편지">
           <div class="letter-paper deckle" data-deckle>
-            <p class="lt-name"><span id="guestName"></span>,</p>
-            <p class="lt-line"><span data-bind="letter.line1"></span><br><span data-bind="letter.line2"></span></p>
+            <p class="lt-name" id="ltName" hidden><span id="guestName"></span>,</p>
+            <p class="lt-line"><span data-bind="letter.line1"></span></p>
             <svg class="lt-heart" aria-hidden="true"><use href="#i-heart"/></svg>
             <div class="lt-body" id="letterBody"></div>
             <p class="lt-sign">신랑 <b data-bind="couple.groom"></b><span class="sep">·</span>신부 <b data-bind="couple.bride"></b></p>
@@ -145,7 +145,7 @@
     </div>
     <button type="button" class="tap-hint tap-hint--btn" id="tapHint" aria-controls="letterCard">TAP TO UNFOLD</button>
 
-    <!-- 초대 링크에 이름이 없을 때만 보이는 이름 입력 -->
+    <!-- 링크 만들기 도구: 주소 끝에 ?edit 를 붙였을 때만 보임 (하객에게는 안 보임) -->
     <form class="name-form" id="nameForm" hidden>
       <label for="nameInput">초대할 분 이름 <small>(적용하면 보낼 링크가 만들어져요)</small></label>
       <div class="name-row">
@@ -159,6 +159,7 @@
           <button type="button" id="shareCopy">COPY LINK</button>
           <button type="button" id="shareSend">SHARE</button>
         </div>
+        <button type="button" class="share-box__plain" id="plainCopy">이름 없는 링크 복사 (부모님 지인용)</button>
       </div>
     </form>
   </section>
@@ -294,7 +295,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="invitation-data.js"></script>
-<script src="app.js"></script>
+<script src="invitation-data.js?v=4"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>
