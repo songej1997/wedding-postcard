@@ -183,7 +183,22 @@
   setGuest(guest);
   if (!guest) {
     var nf = $('#nameForm'), ni = $('#nameInput'); nf.hidden = false;
-    nf.addEventListener('submit', function (e) { e.preventDefault(); setGuest(clean(ni.value, L.maxNameLength)); toast('편지에 이름을 적었어요'); });
+    var shareUrl = '';
+    nf.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var n = clean(ni.value, L.maxNameLength); setGuest(n);
+      if (!n) { $('#shareBox').hidden = true; return toast('이름을 적어 주세요'); }
+      var u = new URL(location.href); u.search = ''; u.hash = ''; u.searchParams.set('to', n);
+      shareUrl = u.toString();
+      try { history.replaceState(null, '', shareUrl); } catch (err) {}   // 주소창도 이름이 들어간 링크로 바뀜
+      $('#shareUrl').textContent = shareUrl; $('#shareBox').hidden = false;
+      toast('편지에 이름을 적었어요. 아래 링크를 보내세요');
+    });
+    $('#shareCopy').addEventListener('click', function () { copyText(shareUrl, '이름이 들어간 링크를 복사했어요'); });
+    $('#shareSend').addEventListener('click', function () {
+      if (navigator.share) navigator.share({ title: D.meta.title, url: shareUrl }).catch(function () {});
+      else copyText(shareUrl, '이름이 들어간 링크를 복사했어요');
+    });
   }
   var stage = $('#stage'), seal = $('#seal'), timers = [];
   function later(ms, fn) { timers.push(setTimeout(fn, reduce ? 0 : ms)); }

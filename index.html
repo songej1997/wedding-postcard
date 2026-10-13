@@ -15,14 +15,14 @@
 <meta property="og:site_name" content="원우 & 혜림">
 <meta property="og:title" content="원우와 혜림, 결혼합니다">
 <meta property="og:description" content="2026년 12월 19일 토요일 오후 1시 30분 · 빌라드지디 수서 단독홀">
-<meta property="og:url" content="__SITE_URL__">
-<meta property="og:image" content="__SITE_URL__assets/og-image.jpg">
+<meta property="og:url" content="https://songej1997.github.io/wedding-postcard/">
+<meta property="og:image" content="https://songej1997.github.io/wedding-postcard/assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="원우와 혜림, 결혼합니다">
 <meta name="twitter:description" content="2026년 12월 19일 토요일 오후 1시 30분 · 빌라드지디 수서 단독홀">
-<meta name="twitter:image" content="__SITE_URL__assets/og-image.jpg">
+<meta name="twitter:image" content="https://songej1997.github.io/wedding-postcard/assets/og-image.jpg">
 
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -147,10 +147,18 @@
 
     <!-- 초대 링크에 이름이 없을 때만 보이는 이름 입력 -->
     <form class="name-form" id="nameForm" hidden>
-      <label for="nameInput">초대받는 분 이름</label>
+      <label for="nameInput">초대할 분 이름 <small>(적용하면 보낼 링크가 만들어져요)</small></label>
       <div class="name-row">
         <input id="nameInput" name="guest" type="text" maxlength="40" autocomplete="off" placeholder="이름을 적어 주세요" enterkeyhint="done">
         <button type="submit">적용</button>
+      </div>
+      <div class="share-box" id="shareBox" hidden>
+        <p class="share-box__t">이 링크를 보내세요</p>
+        <output class="share-box__url" id="shareUrl"></output>
+        <div class="share-box__btns">
+          <button type="button" id="shareCopy">COPY LINK</button>
+          <button type="button" id="shareSend">SHARE</button>
+        </div>
       </div>
     </form>
   </section>
